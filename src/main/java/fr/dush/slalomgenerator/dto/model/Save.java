@@ -22,10 +22,14 @@ public class Save {
 
 	private List<Figure> figures = newArrayList();
 
-	public Save(List<Figure> figures) {
+	private List<Sequence> sequences = newArrayList();
+
+	private List<GeneratorParameter> generatorParameters = newArrayList();
+
+	public Save(List<Figure> figures, List<Sequence> sequences, List<GeneratorParameter> generatorParameters) {
 		this.figures = figures;
+		this.sequences = sequences;
+		this.generatorParameters = generatorParameters;
 	}
-
-
 
 }

@@ -1,0 +1,48 @@
+{
+  "creation" : 1363129176086,
+  "figures" : [ {
+    "name" : "snake",
+    "plotSize" : 5,
+    "description" : "Left roller folow right roller...",
+    "startingDirection" : "FORWARD",
+    "inverseDirection" : "KEEP",
+    "aboutTurn" : false,
+    "probability" : 1
+  }, {
+    "name" : "backreverse",
+    "plotSize" : 1,
+    "description" : "Changing direction, keeping look on same side",
+    "startingDirection" : "BACKWARD",
+    "inverseDirection" : "CHANGE",
+    "aboutTurn" : true,
+    "probability" : 1
+  }, {
+    "name" : "first",
+    "plotSize" : 0,
+    "description" : null,
+    "startingDirection" : "FORWARD",
+    "inverseDirection" : "KEEP",
+    "aboutTurn" : false,
+    "probability" : 1
+  }, {
+    "name" : "second",
+    "plotSize" : 0,
+    "description" : null,
+    "startingDirection" : "FORWARD",
+    "inverseDirection" : "KEEP",
+    "aboutTurn" : false,
+    "probability" : 1
+  } ],
+  "sequences" : [ {
+    "creationDate" : 1363129176081,
+    "name" : "Hello",
+    "figures" : "first,second,first"
+  } ],
+  "generatorParameters" : [ {
+    "name" : "Classic",
+    "plotNumber" : 25,
+    "turnbackNumber" : 3,
+    "turnbackInLastPlot" : 5,
+    "maxFigures" : 40
+  } ]
+}
