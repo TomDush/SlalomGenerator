@@ -39,4 +39,17 @@ public class Figure {
 		this.name = name;
 	}
 
+	public Figure(String name, int plotSize, DIRECTION startingDirection, DIRECTION_CHANGE inverseDirection, boolean aboutTurn) {
+		this(name, plotSize, startingDirection, inverseDirection, aboutTurn, 1);
+	}
+
+	public Figure(String name, int plotSize, DIRECTION startingDirection, DIRECTION_CHANGE inverseDirection, boolean aboutTurn, int probability) {
+		this.name = name;
+		this.plotSize = plotSize;
+		this.startingDirection = startingDirection;
+		this.inverseDirection = inverseDirection;
+		this.aboutTurn = aboutTurn;
+		this.probability = probability;
+	}
+
 }

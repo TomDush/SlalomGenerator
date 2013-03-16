@@ -8,13 +8,13 @@ package fr.dush.slalomgenerator.dto.enums;
  */
 public enum DIRECTION_CHANGE {
 
-	/** Keep rider's direction */
+	/** Rider keeps his direction */
 	KEEP,
 
-	/** Inverse riders's direction */
+	/** Rider inverses his direction */
 	CHANGE,
 
-	/** Rider's can change direction */
+	/** Rider can change his direction, or keep it */
 	NEITHER;
 
 }
