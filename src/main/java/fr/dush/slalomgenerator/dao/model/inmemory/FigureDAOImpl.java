@@ -12,7 +12,7 @@ import com.google.common.collect.Sets;
 import fr.dush.slalomgenerator.dao.model.IFigureDAO;
 import fr.dush.slalomgenerator.dto.model.Figure;
 
-@Named
+@Named("figureDao")
 public class FigureDAOImpl implements IFigureDAO {
 
 	public Set<Figure> figures = Sets.newHashSet();

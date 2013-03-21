@@ -15,7 +15,7 @@ import com.google.common.base.Strings;
 import fr.dush.slalomgenerator.dao.model.IGeneratorParameterDAO;
 import fr.dush.slalomgenerator.dto.model.GeneratorParameter;
 
-@Named
+@Named("generatorParameterDAO")
 public class GeneratorParameterDAOImpl implements IGeneratorParameterDAO {
 
 	private Map<String, GeneratorParameter> parameters = newHashMap();
