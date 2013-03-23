@@ -19,18 +19,27 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.util.ClassUtils;
 
 import com.google.common.base.Strings;
 
+import fr.dush.slalomgenerator.dto.enums.DIRECTION;
+import fr.dush.slalomgenerator.dto.enums.DIRECTION_CHANGE;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.dto.model.GeneratorParameter;
 import fr.dush.slalomgenerator.dto.model.Sequence;
+import fr.dush.slalomgenerator.views.model.renderer.AlignDisplayer;
+import fr.dush.slalomgenerator.views.model.renderer.BooleanDisplayer;
+import fr.dush.slalomgenerator.views.model.renderer.DirectionChangeDisplayer;
+import fr.dush.slalomgenerator.views.model.renderer.DirectionDisplayer;
 import fr.dush.slalomgenerator.views.utils.UiUtils;
 
 @Named
@@ -113,9 +122,12 @@ public class HomePage extends JFrame {
 		final TableModel tableModel = applicationContext.getBean("model" + className, TableModel.class);
 
 		// Create JTable (in JScrollPane)
-		final JScrollPane sequenceTable = new JScrollPane(new JTable(tableModel));
-		sequenceTable.add(Box.createHorizontalGlue());
-		sequenceTable.add(Box.createVerticalGlue());
+		final JTable table = new JTable(tableModel);
+		addRenderer(table);
+
+		final JScrollPane scrollTable = new JScrollPane(table);
+		scrollTable.add(Box.createHorizontalGlue());
+		scrollTable.add(Box.createVerticalGlue());
 
 		// Buttons panel
 		JPanel buttonPanel = new JPanel();
@@ -130,10 +142,36 @@ public class HomePage extends JFrame {
 		sequencePanel.setLayout(new BoxLayout(sequencePanel, BoxLayout.PAGE_AXIS));
 		sequencePanel.setBorder(BorderFactory.createTitledBorder(bundle.getString("layout." + className.toLowerCase())));
 
-		sequencePanel.add(sequenceTable);
+		sequencePanel.add(scrollTable);
 		sequencePanel.add(buttonPanel);
 
 		return sequencePanel;
+	}
+
+	private void addRenderer(final JTable table) {
+		table.setDefaultRenderer(Boolean.class, new BooleanDisplayer());
+		table.setDefaultRenderer(DIRECTION.class, new DirectionDisplayer(bundle));
+		table.setDefaultRenderer(DIRECTION_CHANGE.class, new DirectionChangeDisplayer(bundle));
+
+		// Spécial values
+		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+			final Class<?> columnClass = table.getColumnClass(i);
+
+			try {
+				if (ClassUtils.forName("int", getClass().getClassLoader()).equals(columnClass)) {
+					// Center align integer...
+					final TableColumn column = table.getColumnModel().getColumn(i);
+					column.setCellRenderer(new AlignDisplayer(SwingConstants.CENTER));
+
+				} else if (String.class.equals(columnClass)) {
+					// Set width to Strings
+					final TableColumn column = table.getColumnModel().getColumn(i);
+					column.setPreferredWidth(250);
+				}
+			} catch (Exception e) {
+				LOGGER.warn("Error while setting renderer...", e);
+			}
+		}
 	}
 
 	/**

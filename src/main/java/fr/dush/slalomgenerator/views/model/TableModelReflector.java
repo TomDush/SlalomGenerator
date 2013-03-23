@@ -2,6 +2,7 @@ package fr.dush.slalomgenerator.views.model;
 
 import static com.google.common.collect.Lists.*;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,6 +32,7 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 	/** Object list to display in table */
 	private List<T> objects;
 
+	/** Boolean properties : getter is <code>is</code> and not <code>get</code>. */
 	private List<String> booleanProperties = newArrayListWithCapacity(0);
 
 	/**
@@ -49,7 +51,7 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 	}
 
 	/**
-	 * Define properties which are boolean : no get method, but IS méthod.
+	 * Define properties which are boolean : no get method, but IS method.
 	 *
 	 * @param booleanProperties
 	 */
@@ -69,21 +71,55 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		final String propertyName = properties.get(columnIndex);
+		final String propertyName = getPropertyName(columnIndex);
+		final T object = objects.get(rowIndex);
 
 		try {
-			final String accessor = booleanProperties.contains(propertyName) ? "is" : "get";
-			return clazz.getMethod(accessor + StringUtils.capitalize(propertyName)).invoke(objects.get(rowIndex));
+			// Getter : get or is
+			return getMethod(propertyName).invoke(object);
 
 		} catch (Exception e) {
-			LOGGER.error("Exception throw when trying to access to '{}' property of : {}.", propertyName, objects.get(rowIndex));
-			throw new ReflexionException("Error while reflect on : " + objects.get(rowIndex), e);
+			LOGGER.error("Exception throw when trying to access to '{}' property of : {}.", propertyName, object);
+			throw new ReflexionException("Error while reflect on : " + object, e);
 		}
+	}
+
+	private Method getMethod(final String propertyName) throws NoSuchMethodException {
+		final String accessor = booleanProperties.contains(propertyName) ? "is" : "get";
+
+		return clazz.getMethod(accessor + StringUtils.capitalize(propertyName));
 	}
 
 	@Override
 	public String getColumnName(int column) {
 		return bundle.getString("table.column." + clazz.getSimpleName().toLowerCase() + "." + properties.get(column).toLowerCase());
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		final String columnName = getPropertyName(columnIndex);
+
+		// Cas des boolean
+		if (booleanProperties.contains(columnName)) return Boolean.class;
+
+		// Autre, on va chercher...
+		try {
+			return getMethod(columnName).getReturnType();
+
+		} catch (NoSuchMethodException e) {
+			LOGGER.warn("Method for '{}' property not found in {}.", columnName, clazz);
+			return super.getColumnClass(columnIndex);
+		}
+
+	}
+
+	/**
+	 * Return property name.
+	 * @param columnIndex
+	 * @return
+	 */
+	private String getPropertyName(int columnIndex) {
+		return properties.get(columnIndex);
 	}
 
 }
