@@ -3,11 +3,12 @@ package fr.dush.slalomgenerator.views;
 import javax.inject.Inject;
 
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import fr.dush.slalomgenerator.engine.AbstractJunitTest;
 
-
-public class ViewImplTest extends AbstractJunitTest{
+@ContextConfiguration(locations = { "classpath:spring/persistence-mock.xml" })
+public class ViewImplTest extends AbstractJunitTest {
 
 	@Inject
 	private IView view;
@@ -19,4 +20,3 @@ public class ViewImplTest extends AbstractJunitTest{
 		view.waitEndProgram();
 	}
 }
-

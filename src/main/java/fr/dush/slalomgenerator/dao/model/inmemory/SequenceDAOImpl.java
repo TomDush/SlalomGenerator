@@ -14,7 +14,7 @@ import com.google.common.base.Strings;
 import fr.dush.slalomgenerator.dao.model.ISequenceDAO;
 import fr.dush.slalomgenerator.dto.model.Sequence;
 
-@Named
+@Named("sequenceDAO")
 public class SequenceDAOImpl implements ISequenceDAO {
 
 	private Map<String, Sequence> sequences = newHashMap();

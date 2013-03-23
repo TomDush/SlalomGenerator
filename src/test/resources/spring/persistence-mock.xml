@@ -4,4 +4,5 @@
 
 	<bean class="fr.dush.slalomgenerator.engine.mocks.FigureDAOMock" name="figureDao" />
 	<bean class="fr.dush.slalomgenerator.engine.mocks.GeneratorParameterDAOMock" name="generatorParameterDAO" />
+	<bean class="fr.dush.slalomgenerator.engine.mocks.SequenceDAOMock" name="sequenceDAO" />
 </beans>
