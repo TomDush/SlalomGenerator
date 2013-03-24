@@ -11,6 +11,7 @@ public class GeneratorParameterDAOMock extends GeneratorParameterDAOImpl {
 	public void populate() {
 
 		GeneratorParameter param = new GeneratorParameter();
+		param.setName("Complex generator");
 		param.setMaxFigures(50);
 		param.setPlotNumber(20);
 		param.setTurnbackInLastPlot(3);
@@ -19,6 +20,7 @@ public class GeneratorParameterDAOMock extends GeneratorParameterDAOImpl {
 		save(param);
 
 		param = new GeneratorParameter();
+		param.setName("Very simple generator");
 		param.setMaxFigures(20);
 		param.setPlotNumber(20);
 		param.setTurnbackInLastPlot(5);

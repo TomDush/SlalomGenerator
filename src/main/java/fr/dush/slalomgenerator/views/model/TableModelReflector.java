@@ -48,6 +48,9 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 		this.clazz = clazz;
 		this.properties = properties;
 		this.objects = objects;
+
+		// Adding "action" columns
+		properties.add(0, "this");
 	}
 
 	/**
@@ -72,15 +75,17 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		final String propertyName = getPropertyName(columnIndex);
-		final T object = objects.get(rowIndex);
+		final T value = objects.get(rowIndex);
 
 		try {
+			if ("this".equals(propertyName)) return value;
+
 			// Getter : get or is
-			return getMethod(propertyName).invoke(object);
+			return getMethod(propertyName).invoke(value);
 
 		} catch (Exception e) {
-			LOGGER.error("Exception throw when trying to access to '{}' property of : {}.", propertyName, object);
-			throw new ReflexionException("Error while reflect on : " + object, e);
+			LOGGER.error("Exception throw when trying to access to '{}' property of : {}.", propertyName, value);
+			throw new ReflexionException("Error while reflect on : " + value, e);
 		}
 	}
 
@@ -104,6 +109,8 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 
 		// Autre, on va chercher...
 		try {
+			if ("this".equals(columnName)) return clazz;
+
 			return getMethod(columnName).getReturnType();
 
 		} catch (NoSuchMethodException e) {
@@ -115,11 +122,17 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 
 	/**
 	 * Return property name.
+	 *
 	 * @param columnIndex
 	 * @return
 	 */
 	private String getPropertyName(int columnIndex) {
 		return properties.get(columnIndex);
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return 0 == columnIndex;
 	}
 
 }

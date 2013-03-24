@@ -36,10 +36,12 @@ import fr.dush.slalomgenerator.dto.enums.DIRECTION_CHANGE;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.dto.model.GeneratorParameter;
 import fr.dush.slalomgenerator.dto.model.Sequence;
-import fr.dush.slalomgenerator.views.model.renderer.AlignDisplayer;
-import fr.dush.slalomgenerator.views.model.renderer.BooleanDisplayer;
-import fr.dush.slalomgenerator.views.model.renderer.DirectionChangeDisplayer;
-import fr.dush.slalomgenerator.views.model.renderer.DirectionDisplayer;
+import fr.dush.slalomgenerator.views.model.renderer.ActionRenderer;
+import fr.dush.slalomgenerator.views.model.renderer.ActionRenderer.ACTION;
+import fr.dush.slalomgenerator.views.model.renderer.AlignRenderer;
+import fr.dush.slalomgenerator.views.model.renderer.BooleanRenderer;
+import fr.dush.slalomgenerator.views.model.renderer.DirectionChangeRenderer;
+import fr.dush.slalomgenerator.views.model.renderer.DirectionRenderer;
 import fr.dush.slalomgenerator.views.utils.UiUtils;
 
 @Named
@@ -123,7 +125,7 @@ public class HomePage extends JFrame {
 
 		// Create JTable (in JScrollPane)
 		final JTable table = new JTable(tableModel);
-		addRenderer(table);
+		addRenderer(table, clazz, readOnly);
 
 		final JScrollPane scrollTable = new JScrollPane(table);
 		scrollTable.add(Box.createHorizontalGlue());
@@ -148,10 +150,12 @@ public class HomePage extends JFrame {
 		return sequencePanel;
 	}
 
-	private void addRenderer(final JTable table) {
-		table.setDefaultRenderer(Boolean.class, new BooleanDisplayer());
-		table.setDefaultRenderer(DIRECTION.class, new DirectionDisplayer(bundle));
-		table.setDefaultRenderer(DIRECTION_CHANGE.class, new DirectionChangeDisplayer(bundle));
+	private void addRenderer(final JTable table, Class<?> clazz, boolean readOnly) {
+		table.setDefaultRenderer(Boolean.class, new BooleanRenderer());
+		table.setDefaultRenderer(DIRECTION.class, new DirectionRenderer(bundle));
+		table.setDefaultRenderer(DIRECTION_CHANGE.class, new DirectionChangeRenderer(bundle));
+		table.setDefaultRenderer(clazz, generateActionRenderer(readOnly));
+		table.setDefaultEditor(clazz, generateActionRenderer(readOnly));
 
 		// Spécial values
 		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
@@ -161,7 +165,7 @@ public class HomePage extends JFrame {
 				if (ClassUtils.forName("int", getClass().getClassLoader()).equals(columnClass)) {
 					// Center align integer...
 					final TableColumn column = table.getColumnModel().getColumn(i);
-					column.setCellRenderer(new AlignDisplayer(SwingConstants.CENTER));
+					column.setCellRenderer(new AlignRenderer(SwingConstants.CENTER));
 
 				} else if (String.class.equals(columnClass)) {
 					// Set width to Strings
@@ -172,6 +176,12 @@ public class HomePage extends JFrame {
 				LOGGER.warn("Error while setting renderer...", e);
 			}
 		}
+	}
+
+	private ActionRenderer generateActionRenderer(boolean readOnly) {
+		if(readOnly) return new ActionRenderer(bundle, ACTION.DELETE, ACTION.SHOW);
+
+		return new ActionRenderer(bundle, ACTION.DELETE, ACTION.EDIT);
 	}
 
 	/**

@@ -22,7 +22,7 @@ public class GeneratorParameterDAOImpl implements IGeneratorParameterDAO {
 
 	@Override
 	public void save(GeneratorParameter param) {
-		checkArgument(Strings.isNullOrEmpty(param.getName()), "GeneratorParameter's name must not be null. (param : %s)", param);
+		checkArgument(!Strings.isNullOrEmpty(param.getName()), "GeneratorParameter's name must not be null. (param : %s)", param);
 		parameters.put(param.getName(), param);
 	}
 

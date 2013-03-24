@@ -7,7 +7,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-public class AlignDisplayer extends DefaultTableCellRenderer {
+public class AlignRenderer extends DefaultTableCellRenderer {
 
 	/** Expected horizontal alignment */
 	private int alignment;
@@ -17,7 +17,7 @@ public class AlignDisplayer extends DefaultTableCellRenderer {
 	 *
 	 * @param alignment Constant defined in {@link SwingConstants}.
 	 */
-	public AlignDisplayer(int alignment) {
+	public AlignRenderer(int alignment) {
 		this.alignment = alignment;
 	}
 
