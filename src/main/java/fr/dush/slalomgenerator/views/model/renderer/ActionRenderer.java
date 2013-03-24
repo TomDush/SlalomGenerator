@@ -3,8 +3,6 @@ package fr.dush.slalomgenerator.views.model.renderer;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 import javax.swing.AbstractCellEditor;
@@ -15,9 +13,17 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.dush.slalomgenerator.events.model.DeleteEvent;
+import fr.dush.slalomgenerator.events.model.EditEvent;
+import fr.dush.slalomgenerator.events.model.GenerateEvent;
+import fr.dush.slalomgenerator.events.model.ModelObjectEvent;
+import fr.dush.slalomgenerator.views.utils.EventUtils;
+import fr.dush.slalomgenerator.views.utils.IValueProvider;
 import fr.dush.slalomgenerator.views.utils.UiUtils;
 
 /**
@@ -27,7 +33,7 @@ import fr.dush.slalomgenerator.views.utils.UiUtils;
  *
  */
 @SuppressWarnings("serial")
-public class ActionRenderer extends AbstractCellEditor implements TableCellEditor, TableCellRenderer {
+public class ActionRenderer extends AbstractCellEditor implements TableCellEditor, TableCellRenderer, IValueProvider {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActionRenderer.class);
 
@@ -38,6 +44,7 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 	private JPanel panel;
 
 	/** Object displayed */
+	@Getter
 	private Object value;
 
 	protected ActionRenderer() {
@@ -50,12 +57,12 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 		panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 
-	public ActionRenderer(ResourceBundle bundle, ACTION... actions) {
+	public ActionRenderer(ResourceBundle bundle, Action... actions) {
 		this();
 		this.bundle = bundle;
 
 		// ** Adding actions
-		for (ACTION action : actions) {
+		for (Action action : actions) {
 			panel.add(generateIcon(action));
 		}
 	}
@@ -91,9 +98,9 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 		return panel;
 	}
 
-	private JButton generateIcon(final ACTION action) {
+	private JButton generateIcon(final Action action) {
 
-			final String name = action.toString().toLowerCase();
+		final String name = action.toString().toLowerCase();
 
 		JButton button = new JButton(UiUtils.getIcon(bundle.getString("table.actions.icon." + name)));
 		button.setToolTipText(bundle.getString("table.actions.tooltip." + name));
@@ -103,14 +110,7 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 		button.setContentAreaFilled(false);
 		button.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 
-		button.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Testing events ...
-				LOGGER.info("Click on " + action + " for " + value);
-			}
-		});
+		EventUtils.connectModelObjectEvent(button, getEventType(action), this);
 
 		return button;
 	}
@@ -120,7 +120,31 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 		return null;
 	}
 
-	public enum ACTION {
+	protected Class<? extends ModelObjectEvent> getEventType(Action action) {
+		switch (action) {
+			case DELETE:
+				return DeleteEvent.class;
+
+			case EDIT:
+			case SHOW:
+				return EditEvent.class;
+
+			case GENERATE:
+				return GenerateEvent.class;
+
+			default:
+				LOGGER.error("Not event type defined for " + action + " action.");
+				return null;
+		}
+	}
+
+	/**
+	 * Iconifable actions
+	 *
+	 * @author Thomas Duchatelle (tomdush@gmail.com)
+	 *
+	 */
+	public enum Action {
 
 		/** Delete item action */
 		DELETE,
@@ -129,6 +153,9 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 		EDIT,
 
 		/** Show item action */
-		SHOW;
+		SHOW,
+
+		/** Generate sequence */
+		GENERATE;
 	}
 }

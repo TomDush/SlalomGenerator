@@ -18,5 +18,8 @@ public enum EventType {
 	NEW,
 
 	/** Request to open pop-up to create new model object */
-	CREATE_REQUEST;
+	CREATE_REQUEST,
+
+	/** Request to generate sequence from GeneratorParameter */
+	GENERATE;
 }

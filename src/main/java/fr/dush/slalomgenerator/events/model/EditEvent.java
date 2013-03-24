@@ -1,8 +1,8 @@
 package fr.dush.slalomgenerator.events.model;
 
-public class UpdateEvent extends ModelObjectEvent {
+public class EditEvent extends ModelObjectEvent {
 
-	public <Type> UpdateEvent(Type object) {
+	public <Type> EditEvent(Type object) {
 		super(object);
 	}
 

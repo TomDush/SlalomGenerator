@@ -1,11 +1,14 @@
 package fr.dush.slalomgenerator.views.pages;
 
+import static com.google.common.collect.Lists.*;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
@@ -36,12 +39,15 @@ import fr.dush.slalomgenerator.dto.enums.DIRECTION_CHANGE;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.dto.model.GeneratorParameter;
 import fr.dush.slalomgenerator.dto.model.Sequence;
+import fr.dush.slalomgenerator.events.model.CreateRequestEvent;
+import fr.dush.slalomgenerator.events.model.ModelEvent;
 import fr.dush.slalomgenerator.views.model.renderer.ActionRenderer;
-import fr.dush.slalomgenerator.views.model.renderer.ActionRenderer.ACTION;
+import fr.dush.slalomgenerator.views.model.renderer.ActionRenderer.Action;
 import fr.dush.slalomgenerator.views.model.renderer.AlignRenderer;
 import fr.dush.slalomgenerator.views.model.renderer.BooleanRenderer;
 import fr.dush.slalomgenerator.views.model.renderer.DirectionChangeRenderer;
 import fr.dush.slalomgenerator.views.model.renderer.DirectionRenderer;
+import fr.dush.slalomgenerator.views.utils.EventUtils;
 import fr.dush.slalomgenerator.views.utils.UiUtils;
 
 @Named
@@ -137,7 +143,7 @@ public class HomePage extends JFrame {
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
 		if (!readOnly) {
-			buttonPanel.add(generateButton("button.add", "edit_add-16.png"));
+			buttonPanel.add(generateButton("button.add", "edit_add-16.png", CreateRequestEvent.class, clazz));
 		}
 
 		JPanel sequencePanel = new JPanel();
@@ -154,8 +160,8 @@ public class HomePage extends JFrame {
 		table.setDefaultRenderer(Boolean.class, new BooleanRenderer());
 		table.setDefaultRenderer(DIRECTION.class, new DirectionRenderer(bundle));
 		table.setDefaultRenderer(DIRECTION_CHANGE.class, new DirectionChangeRenderer(bundle));
-		table.setDefaultRenderer(clazz, generateActionRenderer(readOnly));
-		table.setDefaultEditor(clazz, generateActionRenderer(readOnly));
+		table.setDefaultRenderer(clazz, generateActionRenderer(readOnly, clazz));
+		table.setDefaultEditor(clazz, generateActionRenderer(readOnly, clazz));
 
 		// Spécial values
 		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
@@ -178,10 +184,18 @@ public class HomePage extends JFrame {
 		}
 	}
 
-	private ActionRenderer generateActionRenderer(boolean readOnly) {
-		if(readOnly) return new ActionRenderer(bundle, ACTION.DELETE, ACTION.SHOW);
+	private ActionRenderer generateActionRenderer(boolean readOnly, Class<?> clazz) {
+		List<Action> actions = newArrayList(Action.DELETE);
 
-		return new ActionRenderer(bundle, ACTION.DELETE, ACTION.EDIT);
+		// Edit or show ?
+		actions.add(readOnly ? Action.SHOW : Action.EDIT);
+
+		// If generator parameter table : add generate action
+		if(GeneratorParameter.class.isAssignableFrom(clazz)) {
+			actions.add(Action.GENERATE);
+		}
+
+		return new ActionRenderer(bundle, actions.toArray(new Action[actions.size()]));
 	}
 
 	/**
@@ -189,11 +203,14 @@ public class HomePage extends JFrame {
 	 *
 	 * @param name
 	 * @param icon
+	 * @param eventClass TODO
 	 * @return
 	 */
-	private JButton generateButton(String name, String icon) {
+	private <ModelType> JButton generateButton(String name, String icon, Class<? extends ModelEvent> eventClass, Class<ModelType> clazz) {
 		final JButton button = new JButton(bundle.getString(name));
 		if (!Strings.isNullOrEmpty(icon)) button.setIcon(UiUtils.getIcon(icon));
+
+		EventUtils.connect(button, eventClass, clazz);
 
 		return button;
 	}
