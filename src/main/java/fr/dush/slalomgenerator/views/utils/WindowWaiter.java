@@ -22,8 +22,8 @@ public class WindowWaiter extends WindowAdapter implements WindowListener {
 	}
 
 	@Override
-	public synchronized void windowClosing(WindowEvent e) {
-		LOGGER.debug("Main Window Closing {}", e);
+	public synchronized void windowClosed(WindowEvent e) {
+		LOGGER.debug("Main Window closed {}", e);
 
 		finish = true;
 		this.notifyAll();

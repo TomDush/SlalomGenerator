@@ -16,6 +16,13 @@ public abstract class UIEvent {
 	@Setter
 	private Object source;
 
+	public UIEvent() {
+	}
+
+	public UIEvent(Object source) {
+		this.source = source;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName();

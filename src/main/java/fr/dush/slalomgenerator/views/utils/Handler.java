@@ -2,8 +2,15 @@ package fr.dush.slalomgenerator.views.utils;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.eventbus.EventBus;
+
+import fr.dush.slalomgenerator.events.generic.ExceptionEvent;
 
 /**
  * Handle exceptions and redirect to logger.
@@ -11,9 +18,13 @@ import org.slf4j.LoggerFactory;
  * @author Thomas Duchatelle (tomdush@gmail.com)
  *
  */
+@Named
 public class Handler implements UncaughtExceptionHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+
+	@Inject
+	private EventBus bus;
 
 	/** Last exception caught */
 	static private Throwable lastException;
@@ -23,6 +34,7 @@ public class Handler implements UncaughtExceptionHandler {
 		LOGGER.error("Catch view exception : {}", e.getMessage(), e);
 		lastException = e;
 
+		bus.post(new ExceptionEvent(this, e));
 	}
 
 	/**

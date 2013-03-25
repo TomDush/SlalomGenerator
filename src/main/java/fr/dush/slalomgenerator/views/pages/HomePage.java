@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -23,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
@@ -33,12 +36,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.util.ClassUtils;
 
 import com.google.common.base.Strings;
+import com.google.common.eventbus.EventBus;
 
 import fr.dush.slalomgenerator.dto.enums.DIRECTION;
 import fr.dush.slalomgenerator.dto.enums.DIRECTION_CHANGE;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.dto.model.GeneratorParameter;
 import fr.dush.slalomgenerator.dto.model.Sequence;
+import fr.dush.slalomgenerator.events.generic.QuitEvent;
 import fr.dush.slalomgenerator.events.model.CreateRequestEvent;
 import fr.dush.slalomgenerator.events.model.ModelEvent;
 import fr.dush.slalomgenerator.views.model.renderer.ActionRenderer;
@@ -68,10 +73,19 @@ public class HomePage extends JFrame {
 	private ResourceBundle bundle;
 
 	@Inject
-	public HomePage(ResourceBundle bundle) throws HeadlessException {
+	public HomePage(ResourceBundle bundle, final EventBus bus) throws HeadlessException {
 		super(bundle.getString("home.title"));
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		this.bundle = bundle;
+		this.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				bus.post(new QuitEvent(this));
+			}
+
+		});
 	}
 
 	@PostConstruct

@@ -39,7 +39,7 @@ public class ViewImpl implements IView {
 
 				@Override
 				public void run() {
-					Thread.setDefaultUncaughtExceptionHandler(new Handler());
+					Thread.setDefaultUncaughtExceptionHandler(applicationContext.getBean(Handler.class));
 
 					rootFrame = applicationContext.getBean(HomePage.class);
 					rootFrame.setVisible(true);
@@ -61,6 +61,11 @@ public class ViewImpl implements IView {
 
 		LOGGER.info("Program endded");
 
+	}
+
+	@Override
+	public void quit() {
+		rootFrame.dispose();
 	}
 
 }

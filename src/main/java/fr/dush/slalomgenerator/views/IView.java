@@ -18,4 +18,9 @@ public interface IView {
 	 * @throws InterruptedException
 	 */
 	void waitEndProgram() throws InterruptedException;
+
+	/**
+	 * Quit program.
+	 */
+	void quit();
 }
