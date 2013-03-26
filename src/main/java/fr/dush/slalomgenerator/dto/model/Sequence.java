@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Figures sequence.
  *
@@ -29,6 +31,7 @@ public class Sequence {
 		this.name = name;
 	}
 
+	@JsonIgnore
 	public int getFiguresSize() {
 		return figures.size();
 	}
