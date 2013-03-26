@@ -31,4 +31,9 @@ public interface IGeneratorParameterDAO {
 	 * @param parameters New parameters.
 	 */
 	void restore(Collection<GeneratorParameter> parameters);
+
+	/**
+	 * Delete all saved GeneratorParamerter
+	 */
+	void deleteAll();
 }

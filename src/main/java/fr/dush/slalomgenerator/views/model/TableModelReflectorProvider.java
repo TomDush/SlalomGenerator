@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.google.common.eventbus.EventBus;
+
 import fr.dush.slalomgenerator.dao.model.IFigureDAO;
 import fr.dush.slalomgenerator.dao.model.IGeneratorParameterDAO;
 import fr.dush.slalomgenerator.dao.model.ISequenceDAO;
@@ -32,17 +34,25 @@ public class TableModelReflectorProvider {
 	@Inject
 	private ISequenceDAO sequenceDAO;
 
+	@Inject
+	private EventBus bus;
+
 	@Bean(name = "modelGeneratorParameter")
 	@Scope("prototype")
 	public TableModelReflector<GeneratorParameter> generateParameterTableModel() {
-		return new TableModelReflector<GeneratorParameter>(bundle, GeneratorParameter.class, newArrayList("name", "maxFigures", "turnbackNumber"),
-				generatorParameterDAO.findAll());
+		final TableModelReflector<GeneratorParameter> tableModelReflector = new TableModelReflector<GeneratorParameter>(bundle, GeneratorParameter.class,
+				newArrayList("name", "maxFigures", "turnbackNumber"), generatorParameterDAO.findAll());
+		bus.register(tableModelReflector);
+		return tableModelReflector;
 	}
 
 	@Bean(name = "modelSequence")
 	@Scope("prototype")
 	public TableModelReflector<Sequence> generateSequenceModel() {
-		return new TableModelReflector<Sequence>(bundle, Sequence.class, newArrayList("name", "figuresSize"), sequenceDAO.findAll());
+		final TableModelReflector<Sequence> tableModelReflector = new TableModelReflector<Sequence>(bundle, Sequence.class, newArrayList("name", "figuresSize"),
+				sequenceDAO.findAll());
+		bus.register(tableModelReflector);
+		return tableModelReflector;
 	}
 
 	@Bean(name = "modelFigure")
@@ -53,6 +63,7 @@ public class TableModelReflectorProvider {
 
 		// Set boolean properties...
 		figureModel.setBooleanProperties(newArrayList("aboutTurn"));
+		bus.register(figureModel);
 
 		return figureModel;
 	}

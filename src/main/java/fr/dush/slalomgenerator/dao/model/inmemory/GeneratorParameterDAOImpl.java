@@ -45,4 +45,8 @@ public class GeneratorParameterDAOImpl implements IGeneratorParameterDAO {
 
 	}
 
+	@Override
+	public void deleteAll() {
+		parameters.clear();
+	}
 }

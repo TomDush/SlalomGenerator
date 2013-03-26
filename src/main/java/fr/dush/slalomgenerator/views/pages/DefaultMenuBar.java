@@ -38,8 +38,6 @@ public class DefaultMenuBar extends JMenuBar {
 		super();
 		this.bundle = bundle;
 
-		// TODO Menu Shortcuts...
-
 		// File menu
 		JMenu file = new JMenu(bundle.getString("menu.file"));
 		file.add(generateJMenuItem("menu.new", "filenew-16.png", KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK), ClearConfigurationEvent.class));

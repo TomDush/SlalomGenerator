@@ -21,5 +21,9 @@ public enum EventType {
 	CREATE_REQUEST,
 
 	/** Request to generate sequence from GeneratorParameter */
-	GENERATE;
+	GENERATE,
+
+	/** Full list is changed */
+	FULL_CHANGE;
+
 }

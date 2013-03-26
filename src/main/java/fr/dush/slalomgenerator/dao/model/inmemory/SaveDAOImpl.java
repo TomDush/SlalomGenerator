@@ -66,7 +66,7 @@ public class SaveDAOImpl implements ISaveDAO {
 	}
 
 	@Override
-	public void loadFile(File file) throws IOException {
+	public Save loadFile(File file) throws IOException {
 		Save save = objectMapper.readValue(file, new TypeReference<Save>() {
 		});
 
@@ -80,6 +80,15 @@ public class SaveDAOImpl implements ISaveDAO {
 		figureDAO.restore(save.getFigures());
 		sequenceDAO.restore(save.getSequences());
 		generatorParameterDAO.restore(save.getGeneratorParameters());
+
+		return save;
+	}
+
+	@Override
+	public void clear() {
+		figureDAO.deleteAll();
+		sequenceDAO.deleteAll();
+		generatorParameterDAO.deleteAll();
 	}
 
 	/**

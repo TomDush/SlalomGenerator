@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import com.google.common.eventbus.Subscribe;
+
+import fr.dush.slalomgenerator.events.model.FullChangeModel;
 import fr.dush.slalomgenerator.exceptions.ReflexionException;
 
 @SuppressWarnings("serial")
@@ -118,6 +121,18 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 			return super.getColumnClass(columnIndex);
 		}
 
+	}
+
+	@Subscribe
+	public void changeValues(FullChangeModel<T> event) {
+		LOGGER.debug("Received FullChangeModel event for class {}. [this.clazz={}]", event.getClazz().getSimpleName(), clazz.getSimpleName());
+		if (event.getClazz().equals(clazz)) {
+			// Change values
+			objects = newCopyOnWriteArrayList(event.getList());
+
+			// Force table to be regenerate.
+			fireTableDataChanged();
+		}
 	}
 
 	/**
