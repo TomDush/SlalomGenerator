@@ -19,7 +19,8 @@ import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 
 /**
- * Controllers are proxyfied to catch @Subscribe methods. Thus, they mustn't register themself. This object register all classes which have @Subscribe annotation.
+ * Controllers are proxyfied to catch @Subscribe methods. Thus, they mustn't register themself. This object register all classes which have @Subscribe
+ * annotation.
  *
  * @author Thomas Duchatelle
  */
@@ -50,13 +51,15 @@ public class EventListenersRegister {
 				if (clazz.isAnnotationPresent(Named.class)) {
 
 					try {
-						bus.register(applicationContext.getBean(clazz));
+						for (Object bean : applicationContext.getBeansOfType(clazz).values()) {
+							bus.register(bean);
+						}
 					} catch (BeansException e) {
 						LOGGER.warn("{} is not spring bean.", clazz, e);
 					}
 
 				} else {
-					LOGGER.info("{} must be proxyfied...");
+					LOGGER.info("{} must be proxyfied...", clazz);
 					// TODO proxified other methods...
 				}
 			}

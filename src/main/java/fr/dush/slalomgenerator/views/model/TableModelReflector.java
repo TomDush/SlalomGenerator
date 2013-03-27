@@ -16,6 +16,9 @@ import org.springframework.util.StringUtils;
 import com.google.common.eventbus.Subscribe;
 
 import fr.dush.slalomgenerator.events.model.FullChangeModel;
+import fr.dush.slalomgenerator.events.model.confirmed.ConfirmDeleteEvent;
+import fr.dush.slalomgenerator.events.model.confirmed.ConfirmEditEvent;
+import fr.dush.slalomgenerator.events.model.confirmed.ConfirmNewEvent;
 import fr.dush.slalomgenerator.exceptions.ReflexionException;
 
 @SuppressWarnings("serial")
@@ -132,6 +135,36 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 
 			// Force table to be regenerate.
 			fireTableDataChanged();
+		}
+	}
+
+	@Subscribe
+	public void objectEdited(ConfirmEditEvent event) {
+		// If this table model treat event's type
+		if (clazz.equals(event.getClazz())) {
+			final int index = objects.indexOf(event.getObject());
+			fireTableRowsUpdated(index, index);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Subscribe
+	public void objectAdded(ConfirmNewEvent event) {
+		// If this table model treat event's type
+		if (clazz.equals(event.getClazz())) {
+			objects.add((T) event.getObject());
+			fireTableRowsInserted(objects.size() - 1, objects.size()-1);
+		}
+	}
+
+	@Subscribe
+	public void objectDeleted(ConfirmDeleteEvent event) {
+		// If this table model treat event's type
+		if (clazz.equals(event.getClazz())) {
+			final int index = objects.indexOf(event.getObject());
+			if (-1 != index && null != objects.remove(index)) {
+				fireTableRowsDeleted(index, index);
+			}
 		}
 	}
 
