@@ -1,5 +1,7 @@
 package fr.dush.slalomgenerator.views.pages.dialog;
 
+import static com.google.common.collect.Lists.*;
+
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
@@ -16,6 +18,6 @@ public class FigureDialogTest extends AbstractJunitTest {
 
 	@Test
 	public void testDialog() throws Exception {
-		new FigureDialog(bundle, null, new Figure()).setVisible(true);
+		new FigureDialog<Figure>(bundle, null, new Figure(), newArrayList("name", "description", "plotSize", "startingDirection", "inverseDirection", "aboutTurn")).setVisible(true);
 	}
 }

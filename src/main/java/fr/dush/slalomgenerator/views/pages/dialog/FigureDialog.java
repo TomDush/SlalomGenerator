@@ -1,14 +1,17 @@
 package fr.dush.slalomgenerator.views.pages.dialog;
 
+import java.awt.Container;
+import java.awt.Dimension;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-
-import fr.dush.slalomgenerator.dto.model.Figure;
+import javax.swing.SwingConstants;
 
 /**
  * Dialog to display generic informations on this application.
@@ -17,38 +20,99 @@ import fr.dush.slalomgenerator.dto.model.Figure;
  *
  */
 @SuppressWarnings("serial")
-public class FigureDialog extends JDialog {
+public class FigureDialog<T> extends JDialog {
 
 	/** Figure to display */
-	private final Figure figure;
+	private final T object;
 
-	public FigureDialog(ResourceBundle bundle, JFrame frame, Figure figure) {
-		super(frame, bundle.getString("dialog.figure.title"), true);
+	/** SpringLayout : beautiful layout ! */
+	private SpringLayout layout;
 
-		this.figure = figure; // TODO check is not null
+	/** Dialog head message */
+	private JLabel title;
 
-		// Layout
-		final SpringLayout layout = new SpringLayout();
+	/** When diplay lines, this is last label */
+	private Container topComponent;
+
+	/**
+	 * Construct dialog to display parameters object
+	 *
+	 * @param bundle
+	 * @param frame
+	 * @param object
+	 * @param properties
+	 */
+	public FigureDialog(ResourceBundle bundle, JFrame frame, T object, List<String> properties) {
+		super(frame, true);
+		layout = new SpringLayout();
 		setLayout(layout);
 
-		//
+		// ** Object
+		if (null == object) throw new IllegalArgumentException("object mustn't not be null.");
+		this.object = object;
 
-        final JLabel label = new JLabel("Label: ");
-		getContentPane().add(label);
-        final JTextField nameField = new JTextField("Text field", 15);
-		getContentPane().add(nameField);
-		layout.putConstraint(SpringLayout.WEST, label, 5, SpringLayout.WEST, getContentPane());
-		layout.putConstraint(SpringLayout.NORTH, label, 5, SpringLayout.NORTH, getContentPane());
+		// Bundle prefix
+		String prefix = "dialog." + object.getClass().getSimpleName().toLowerCase();
 
-		layout.putConstraint(SpringLayout.WEST, nameField, 5, SpringLayout.EAST, label);
-		layout.putConstraint(SpringLayout.EAST, nameField, 5, SpringLayout.EAST, getContentPane());
-		layout.putConstraint(SpringLayout.NORTH, nameField, 5, SpringLayout.NORTH, getContentPane());
+		// ** Title & Header
+		setTitle(bundle.getString(prefix + ".title"));
 
-		// Generic configuration
-//		setModalityType(ModalityType.APPLICATION_MODAL);
+		// Page title
+		title = new JLabel(bundle.getString(prefix + ".header"));
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		getContentPane().add(title);
+		layout.putConstraint(SpringLayout.WEST, title, 5, SpringLayout.WEST, getContentPane());
+		layout.putConstraint(SpringLayout.EAST, title, -5, SpringLayout.EAST, getContentPane());
+		layout.putConstraint(SpringLayout.NORTH, title, 5, SpringLayout.NORTH, getContentPane());
+
+		// Lines
+		for (String prop : properties) {
+			final String label = bundle.getString(prefix + "." + prop.toLowerCase());
+			final JComponent field = new JTextField();
+			addLine(label, field);
+		}
+
+//		addLine("Label 1 :", new JTextField("Text field", 15));
+//		addLine("Label 2 :", new JTextField("Text field", 15));
+//		addLine("Label 3 :", new JTextField("Text field", 15));
+//		addLine("Label 4 :", new JTextField("Text field", 15));
+
+		// setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//		pack();
+		// pack();
+		setSize(300, 400);
 
 		this.setLocationRelativeTo(null);
+	}
+
+	private void addLine(String labelString, JComponent component) {
+
+		// Label
+		final JLabel label = new JLabel(labelString);
+		label.setMinimumSize(new Dimension(200, 20));
+		getContentPane().add(label);
+
+		layout.putConstraint(SpringLayout.WEST, label, 5, SpringLayout.WEST, getContentPane());
+		if (null != topComponent) {
+			layout.putConstraint(SpringLayout.NORTH, label, 5, SpringLayout.SOUTH, topComponent);
+			layout.putConstraint(SpringLayout.EAST, label, 0, SpringLayout.EAST, topComponent);
+		} else {
+			layout.putConstraint(SpringLayout.NORTH, label, 10, SpringLayout.SOUTH, title);
+		}
+
+		// Field
+		getContentPane().add(component);
+
+		layout.putConstraint(SpringLayout.EAST, component, -5, SpringLayout.EAST, getContentPane());
+		layout.putConstraint(SpringLayout.WEST, component, 5, SpringLayout.EAST, label);
+		if (null != topComponent) {
+			layout.putConstraint(SpringLayout.NORTH, component, 5, SpringLayout.SOUTH, topComponent);
+		} else {
+			layout.putConstraint(SpringLayout.NORTH, component, 10, SpringLayout.SOUTH, title);
+
+		}
+
+		// Change top
+		topComponent = label;
 	}
 }
