@@ -8,21 +8,21 @@ package fr.dush.slalomgenerator.exceptions;
  *
  */
 @SuppressWarnings("serial")
-public class EventCreation extends RuntimeException {
+public class EventCreationException extends RuntimeException {
 
-	public EventCreation() {
+	public EventCreationException() {
 		super();
 	}
 
-	public EventCreation(String message, Throwable cause) {
+	public EventCreationException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public EventCreation(String message) {
+	public EventCreationException(String message) {
 		super(message);
 	}
 
-	public EventCreation(Throwable cause) {
+	public EventCreationException(Throwable cause) {
 		super(cause);
 	}
 

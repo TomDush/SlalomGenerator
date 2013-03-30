@@ -31,7 +31,7 @@ public class SequenceDAOImplTest extends AbstractJunitTest {
 			failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
 
 		} catch (Exception e) {
-			assertThat(e).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("must be filled");
+			assertThat(e).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("doit être renseigné");
 		}
 	}
 

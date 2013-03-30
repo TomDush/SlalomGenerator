@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.EventBus;
 
 import fr.dush.slalomgenerator.events.generic.ExceptionEvent;
+import fr.dush.slalomgenerator.events.generic.FunctionalErrorEvent;
+import fr.dush.slalomgenerator.exceptions.ViewException;
 
 /**
  * Handle exceptions and redirect to logger.
@@ -19,9 +21,9 @@ import fr.dush.slalomgenerator.events.generic.ExceptionEvent;
  *
  */
 @Named
-public class Handler implements UncaughtExceptionHandler {
+public class ExceptionsHandler implements UncaughtExceptionHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionsHandler.class);
 
 	@Inject
 	private EventBus bus;
@@ -34,7 +36,12 @@ public class Handler implements UncaughtExceptionHandler {
 		LOGGER.error("Catch view exception : {}", e.getMessage(), e);
 		lastException = e;
 
-		bus.post(new ExceptionEvent(this, e));
+		// Post error : functional if error cause is user ; if it's not, send exception event.
+		if (e instanceof ViewException) {
+			bus.post(new FunctionalErrorEvent(this, e.getMessage()));
+		} else {
+			bus.post(new ExceptionEvent(this, e));
+		}
 	}
 
 	/**

@@ -13,7 +13,7 @@ import com.google.common.eventbus.EventBus;
 import fr.dush.slalomgenerator.events.UIEvent;
 import fr.dush.slalomgenerator.events.model.ModelEvent;
 import fr.dush.slalomgenerator.events.model.ModelObjectEvent;
-import fr.dush.slalomgenerator.exceptions.EventCreation;
+import fr.dush.slalomgenerator.exceptions.EventCreationException;
 
 /**
  * Static utilities class initialized by Spring.
@@ -36,16 +36,16 @@ public class EventUtils {
 	 *
 	 * @param source
 	 * @param eventClass
-	 * @throws EventCreation Invalid event class.
+	 * @throws EventCreationException Invalid event class.
 	 */
-	public static void fireEvent(Object source, Class<? extends UIEvent> eventClass) throws EventCreation {
+	public static void fireEvent(Object source, Class<? extends UIEvent> eventClass) throws EventCreationException {
 		try {
 			final UIEvent event = eventClass.newInstance();
 			event.setSource(source);
 
 			bus.post(event);
 		} catch (Exception e) {
-			throw new EventCreation("Can't instanciate " + eventClass + " post by " + source + ".", e);
+			throw new EventCreationException("Can't instanciate " + eventClass + " post by " + source + ".", e);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class EventUtils {
 
 			bus.post(event);
 		} catch (Exception e) {
-			throw new EventCreation("Can't instanciate " + eventClass + " post by " + source + ".", e);
+			throw new EventCreationException("Can't instanciate " + eventClass + " post by " + source + ".", e);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class EventUtils {
 
 			bus.post(event);
 		} catch (Exception e) {
-			throw new EventCreation("Can't instanciate " + eventClass + " post by " + source + ".", e);
+			throw new EventCreationException("Can't instanciate " + eventClass + " post by " + source + ".", e);
 		}
 	}
 

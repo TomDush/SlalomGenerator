@@ -31,11 +31,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import com.google.common.base.Strings;
 import com.google.common.eventbus.EventBus;
 
 import fr.dush.slalomgenerator.dto.enums.DIRECTION;
 import fr.dush.slalomgenerator.dto.enums.DIRECTION_CHANGE;
 import fr.dush.slalomgenerator.events.generic.ExceptionEvent;
+import fr.dush.slalomgenerator.events.generic.FunctionalErrorEvent;
 import fr.dush.slalomgenerator.events.model.confirmed.ConfirmEditEvent;
 import fr.dush.slalomgenerator.events.model.confirmed.ConfirmNewEvent;
 import fr.dush.slalomgenerator.exceptions.ViewException;
@@ -53,6 +55,9 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 
 	/** Application event bus */
 	private EventBus bus;
+
+	/** Apllication localization resources */
+	private ResourceBundle bundle;
 
 	/** Object to display */
 	private final T object;
@@ -81,7 +86,7 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 	 *
 	 * @param frame
 	 * @param bundle
-	 * @param bus TODO
+	 * @param bus
 	 * @param object
 	 * @param properties
 	 * @throws LinkageError
@@ -98,6 +103,7 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 
 		// ** Object
 		this.bus = bus;
+		this.bundle = bundle;
 		if (null == object) throw new IllegalArgumentException("object mustn't not be null.");
 		this.object = object;
 
@@ -118,13 +124,13 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 			ClassNotFoundException, LinkageError {
 
 		// Bundle prefix
-		final String prefix = "dialog." + object.getClass().getSimpleName().toLowerCase();
+		final String prefix = getBundlePrefix();
 
 		// ** Title & Header
-		setTitle(bundle.getString(prefix + ".title"));
+		setTitle(bundle.getString(prefix + "title"));
 
 		// Page title
-		title = new JLabel(bundle.getString(prefix + ".header"));
+		title = new JLabel(bundle.getString(prefix + "header"));
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		getContentPane().add(title);
 		layout.putConstraint(SpringLayout.WEST, title, 5, SpringLayout.WEST, getContentPane());
@@ -133,7 +139,7 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 
 		// Lines
 		for (String prop : properties) {
-			final String label = bundle.getString(prefix + "." + prop.toLowerCase());
+			final String label = bundle.getString(prefix + prop.toLowerCase());
 			final JComponent field = getField(object, prop);
 			addLine(label, field);
 
@@ -165,6 +171,10 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 		layout.putConstraint(SpringLayout.SOUTH, saveButton, -5, SpringLayout.SOUTH, getContentPane());
 	}
 
+	private String getBundlePrefix() {
+		return "dialog." + this.object.getClass().getSimpleName().toLowerCase() + ".";
+	}
+
 	/**
 	 * Called when save button pressed
 	 */
@@ -175,11 +185,24 @@ public class FormDialog<T> extends JFrame implements ActionListener {
 			// ** Collect values
 			for (Entry<String, JComponent> entry : fields.entrySet()) {
 				if (entry.getValue() instanceof JTextField && integerFields.contains(entry.getKey())) {
-					final String newValue = ((JTextField) entry.getValue()).getText();
-					object.getClass().getMethod("set" + StringUtils.capitalize(entry.getKey()), int.class).invoke(object, Integer.valueOf(newValue));
+					try {
+						final String newValue = ((JTextField) entry.getValue()).getText();
+						object.getClass().getMethod("set" + StringUtils.capitalize(entry.getKey()), int.class).invoke(object, Integer.valueOf(newValue));
+
+					} catch (NumberFormatException e) {
+						bus.post(new FunctionalErrorEvent(this, bundle.getString(getBundlePrefix() + entry.getKey().toLowerCase()) + " "
+								+ bundle.getString("error.notinteger")));
+						return;
+					}
 
 				} else if (entry.getValue() instanceof JTextField) {
 					final String newValue = ((JTextField) entry.getValue()).getText();
+					// If name, it must be filled
+					if(Strings.isNullOrEmpty(newValue) && "name".equals(entry.getKey())) {
+						bus.post(new FunctionalErrorEvent(this, bundle.getString(getBundlePrefix() + entry.getKey().toLowerCase()) + " "
+								+ bundle.getString("error.namenotfilled")));
+						return;
+					}
 					object.getClass().getMethod("set" + StringUtils.capitalize(entry.getKey()), String.class).invoke(object, newValue);
 
 				} else if (entry.getValue() instanceof JComboBox<?>) {

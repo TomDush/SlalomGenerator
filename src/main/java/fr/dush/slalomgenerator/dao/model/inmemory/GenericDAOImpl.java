@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
+
+import javax.inject.Inject;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -18,6 +21,9 @@ import com.google.common.collect.Iterables;
 import fr.dush.slalomgenerator.dao.model.IGenericDAO;
 
 public abstract class GenericDAOImpl<Type> implements IGenericDAO<Type> {
+
+	@Inject
+	private ResourceBundle bundle;
 
 	/** Function to get id from object */
 	private final Function<Type, Serializable> idFunction;
@@ -34,7 +40,7 @@ public abstract class GenericDAOImpl<Type> implements IGenericDAO<Type> {
 		// Generate ID
 		final Serializable id = idFunction.apply(figure);
 		// If id mustn't be null, and if it's String, mustn't be empty.
-		checkArgument(id instanceof String && Strings.isNullOrEmpty((String) id) || null != id, "Id must be filled.");
+		checkArgument(id instanceof String ? !Strings.isNullOrEmpty((String) id) : null != id, bundle.getString("error.namenotfilled"));
 
 		// Add value
 		datas.put(id, figure);

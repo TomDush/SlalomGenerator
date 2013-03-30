@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
 
 import fr.dush.slalomgenerator.exceptions.ViewException;
 import fr.dush.slalomgenerator.views.pages.HomePage;
-import fr.dush.slalomgenerator.views.utils.Handler;
+import fr.dush.slalomgenerator.views.utils.ExceptionsHandler;
 import fr.dush.slalomgenerator.views.utils.WindowWaiter;
 
 @Named
@@ -28,7 +28,7 @@ public class ViewImpl implements IView {
 
 	@PostConstruct
 	public void initExceptionHandler() {
-		System.setProperty("sun.awt.exception.handler", Handler.class.getName());
+		System.setProperty("sun.awt.exception.handler", ExceptionsHandler.class.getName());
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ViewImpl implements IView {
 
 				@Override
 				public void run() {
-					Thread.setDefaultUncaughtExceptionHandler(applicationContext.getBean(Handler.class));
+					Thread.setDefaultUncaughtExceptionHandler(applicationContext.getBean(ExceptionsHandler.class));
 
 					rootFrame = applicationContext.getBean(HomePage.class);
 					rootFrame.setVisible(true);

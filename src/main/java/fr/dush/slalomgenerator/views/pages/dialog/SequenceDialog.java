@@ -24,12 +24,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+import com.google.common.base.Strings;
 import com.google.common.eventbus.EventBus;
 
 import fr.dush.slalomgenerator.dto.enums.DIRECTION;
 import fr.dush.slalomgenerator.dto.enums.DIRECTION_CHANGE;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.dto.model.Sequence;
+import fr.dush.slalomgenerator.events.generic.FunctionalErrorEvent;
 import fr.dush.slalomgenerator.events.model.ModelObjectEvent;
 import fr.dush.slalomgenerator.events.model.confirmed.ConfirmEditEvent;
 import fr.dush.slalomgenerator.events.model.confirmed.ConfirmNewEvent;
@@ -121,6 +123,12 @@ public class SequenceDialog extends JFrame implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Name must be filled
+		if (Strings.isNullOrEmpty(titleField.getText())) {
+			bus.post(new FunctionalErrorEvent(this, bundle.getString("error.namenotfilled")));
+			return;
+		}
+
 		sequence.setName(titleField.getText());
 
 		// this frame will be closed by dao controller : when sequence is saved.
@@ -194,11 +202,11 @@ public class SequenceDialog extends JFrame implements ActionListener {
 	 * Close frame, ask if it's new sequence.
 	 */
 	private void closeFrame() {
-		if(newSequence) {
+		if (newSequence) {
 			final int askResponse = JOptionPane.showConfirmDialog(this, bundle.getString("dialog.sequence.saveordiscard"));
 			if (JOptionPane.OK_OPTION == askResponse) {
 				actionPerformed(null); // save
-			} else if(JOptionPane.CANCEL_OPTION == askResponse) {
+			} else if (JOptionPane.CANCEL_OPTION == askResponse) {
 				return;
 			}
 		}

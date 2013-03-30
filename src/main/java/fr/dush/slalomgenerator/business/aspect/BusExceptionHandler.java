@@ -10,6 +10,8 @@ import org.aspectj.lang.annotation.Aspect;
 import com.google.common.eventbus.EventBus;
 
 import fr.dush.slalomgenerator.events.generic.ExceptionEvent;
+import fr.dush.slalomgenerator.events.generic.FunctionalErrorEvent;
+import fr.dush.slalomgenerator.exceptions.ViewException;
 
 /**
  * Handle exceptions thrown by bus subscribed method.
@@ -38,6 +40,11 @@ public class BusExceptionHandler {
 		try {
 			// Execute method (which treat event)
 			return pjp.proceed();
+
+		} catch (ViewException e) {
+			// If exception, post it in event bus
+			bus.post(new FunctionalErrorEvent(pjp.getThis(), e.getMessage()));
+			return null;
 
 		} catch (Exception e) {
 			// If exception, post it in event bus

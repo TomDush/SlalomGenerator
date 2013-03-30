@@ -24,7 +24,7 @@ import fr.dush.slalomgenerator.dto.model.Sequence;
 import fr.dush.slalomgenerator.events.configuration.ClearConfigurationEvent;
 import fr.dush.slalomgenerator.events.configuration.LoadConfigurationEvent;
 import fr.dush.slalomgenerator.events.configuration.SaveConfigurationEvent;
-import fr.dush.slalomgenerator.events.generic.FunctionalError;
+import fr.dush.slalomgenerator.events.generic.FunctionalErrorEvent;
 import fr.dush.slalomgenerator.events.generic.QuitEvent;
 import fr.dush.slalomgenerator.events.model.FullChangeModel;
 
@@ -75,7 +75,7 @@ public class ConfigurationSaveController {
 
 		} catch (IOException e) {
 			LOGGER.warn("Can't save into file {}...", selectedFile, e);
-			bus.post(new FunctionalError(event, bundle.getString("dialog.saver.ioexception") + "(" + e.getMessage() + ")"));
+			bus.post(new FunctionalErrorEvent(event, bundle.getString("dialog.saver.ioexception") + "(" + e.getMessage() + ")"));
 		}
 	}
 
@@ -150,7 +150,7 @@ public class ConfigurationSaveController {
 		// Get selected file, and test it
 		final File selectedFile = chooser.getSelectedFile();
 		if (null == selectedFile) {
-			bus.post(new FunctionalError(chooser, bundle.getString("dialog.saver.nullfile")));
+			bus.post(new FunctionalErrorEvent(chooser, bundle.getString("dialog.saver.nullfile")));
 		}
 
 		defaultFile = selectedFile.getParentFile();

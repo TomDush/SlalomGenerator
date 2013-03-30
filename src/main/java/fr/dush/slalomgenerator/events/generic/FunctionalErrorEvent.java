@@ -12,11 +12,11 @@ import fr.dush.slalomgenerator.events.UIEvent;
  */
 @Getter
 @Setter
-public class FunctionalError extends UIEvent {
+public class FunctionalErrorEvent extends UIEvent {
 
 	private String message;
 
-	public FunctionalError(Object source, String message) {
+	public FunctionalErrorEvent(Object source, String message) {
 		super(source);
 		this.message = message;
 	}

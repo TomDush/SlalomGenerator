@@ -81,19 +81,25 @@ public class DaoController {
 		// DAO updated : can close dialog
 		boolean ok = false;
 
-		if (event.getObject() instanceof Figure) {
-			figureDAO.save((Figure) event.getObject());
-			ok = true;
-		}
+		try {
+			if (event.getObject() instanceof Figure) {
+				figureDAO.save((Figure) event.getObject());
+				ok = true;
+			}
 
-		if (event.getObject() instanceof GeneratorParameter) {
-			generatorParameterDAO.save((GeneratorParameter) event.getObject());
-			ok = true;
-		}
+			if (event.getObject() instanceof GeneratorParameter) {
+				generatorParameterDAO.save((GeneratorParameter) event.getObject());
+				ok = true;
+			}
 
-		if (event.getObject() instanceof Sequence) {
-			sequenceDAO.save((Sequence) event.getObject());
-			ok = true;
+			if (event.getObject() instanceof Sequence) {
+				sequenceDAO.save((Sequence) event.getObject());
+				ok = true;
+			}
+
+		} catch (IllegalArgumentException e) {
+			// If illegal arg, it's because name isn't filled. Wrapped in ViewException to be treat by handler as functional exception.
+			throw new ViewException(e.getMessage(), e);
 		}
 
 		// Close dialog.

@@ -15,7 +15,7 @@ import com.google.common.eventbus.Subscribe;
 import fr.dush.slalomgenerator.events.configuration.SaveConfigurationEvent;
 import fr.dush.slalomgenerator.events.generic.AboutEvent;
 import fr.dush.slalomgenerator.events.generic.ExceptionEvent;
-import fr.dush.slalomgenerator.events.generic.FunctionalError;
+import fr.dush.slalomgenerator.events.generic.FunctionalErrorEvent;
 import fr.dush.slalomgenerator.events.generic.QuitEvent;
 import fr.dush.slalomgenerator.views.IView;
 import fr.dush.slalomgenerator.views.pages.dialog.AboutDialog;
@@ -90,7 +90,7 @@ public class GenericController {
 	}
 
 	@Subscribe
-	public void displayError(FunctionalError event) {
+	public void displayError(FunctionalErrorEvent event) {
 		JOptionPane.showMessageDialog(null, event.getMessage(), bundle.getString("dialog.functionalerror.title"), JOptionPane.ERROR_MESSAGE);
 	}
 
