@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
@@ -20,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 import com.google.common.eventbus.EventBus;
 
@@ -68,6 +71,16 @@ public class SequenceDialog extends JFrame implements ActionListener {
 		this.bus = bus;
 		this.sequence = sequence;
 		this.newSequence = newSequence;
+
+		// Close handler
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				closeFrame();
+			}
+		});
 
 		// Layout and frame properties
 		setLayout(new BorderLayout());
@@ -181,9 +194,16 @@ public class SequenceDialog extends JFrame implements ActionListener {
 	 * Close frame, ask if it's new sequence.
 	 */
 	private void closeFrame() {
-		if (!newSequence || JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, bundle.getString("dialog.sequence.closewithoutsaving"))) {
-			dispose();
+		if(newSequence) {
+			final int askResponse = JOptionPane.showConfirmDialog(this, bundle.getString("dialog.sequence.saveordiscard"));
+			if (JOptionPane.OK_OPTION == askResponse) {
+				actionPerformed(null); // save
+			} else if(JOptionPane.CANCEL_OPTION == askResponse) {
+				return;
+			}
 		}
+
+		dispose();
 	}
 
 }
