@@ -1,13 +1,8 @@
 # SLALOM GENERATOR
 
-__Slalom generator__ is small tools generating slalom sequence.
+__Slalom Generator__ is small java tools (cross platform) to generate _Slalom Sequences_ .
 
-User define some parameters like :
-
-- known figures : name, plot size, ...
-- total plots number
-
-And this tools generate coherent sequence containing this figures.
+Indicate figures you know, number of plot, and expected desired number of figures and generate a coherent sequence !
 
 ![Screenshot](screenshot_full.png)
 
@@ -17,8 +12,7 @@ And this tools generate coherent sequence containing this figures.
 
 ## How to install this tools ?
 
-1. Download it on :
-> [https://sourceforge.net/projects/slalomgenerator/files/latest/download?source=files](https://sourceforge.net/projects/slalomgenerator/files/latest/download?source=files)
+1. Download it on [https://sourceforge.net/projects/slalomgenerator/files/latest/download?source=files](https://sourceforge.net/projects/slalomgenerator/files/latest/download?source=files)
 1. Unzip file where you want to install it
 1. Launch (click) on __SlalomGenerator.jar__
 
@@ -33,7 +27,7 @@ UI interface is divided into 3 parts :
 
 ### Figures
 
-To add figure, click on "_add_" bottom the left part, or 
+To add figure, click on _add_ bottom the left part, or 
 > Slalom > Create new figure
 
 Figures have some properties :
@@ -46,7 +40,7 @@ Figures have some properties :
 
 ### Generators
 
-To add figure, click on "_add_" on middle of right part, or 
+To add figure, click on _add_ on middle of right part, or 
 > Slalom > Create new generator
 
 Generator parameters are :
@@ -75,9 +69,12 @@ You can ask me for improvement or submit me issues on [GitHub page project][gh].
 
 Be free to checkout sources and request me for pull. You need _Maven_ but you can use editor of your choice (_Eclipse_, ...).
 
-1. Get it on [GitHub][GH] :
+First get it on [GitHub][GH] :
+
 > git clone https://github.com/TomDush/SlalomGenerator.git
-1. Compile with :
+
+then, compile with :
+
 > mvn clean package  
 
 
