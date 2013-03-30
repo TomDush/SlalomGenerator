@@ -61,7 +61,7 @@ public class SequenceStatus {
 	 */
 	public void addFigure(Figure figure) {
 		LOGGER.debug("Initial position : plot={} ; direction={} ; hafturnCount={}", new Object[] { plot, direction, hafturnCount });
-		LOGGER.info("Add figure : {}.", figure);
+		LOGGER.debug("Add figure : {}.", figure);
 
 		// Adding figure to sequence
 		sequence.getFigures().add(figure);

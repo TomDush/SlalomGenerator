@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.util.ClassUtils;
 
 import com.google.common.base.Strings;
 import com.google.common.eventbus.EventBus;
@@ -182,7 +181,7 @@ public class HomePage extends JFrame {
 			final Class<?> columnClass = table.getColumnClass(i);
 
 			try {
-				if (ClassUtils.forName("int", getClass().getClassLoader()).equals(columnClass)) {
+				if (int.class.equals(columnClass)) {
 					// Center align integer...
 					final TableColumn column = table.getColumnModel().getColumn(i);
 					column.setCellRenderer(new AlignRenderer(SwingConstants.CENTER));

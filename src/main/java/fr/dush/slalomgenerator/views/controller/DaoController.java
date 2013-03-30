@@ -81,13 +81,18 @@ public class DaoController {
 		// DAO updated : can close dialog
 		boolean ok = false;
 
-		if (Figure.class.equals(event.getClazz())) {
+		if (event.getObject() instanceof Figure) {
 			figureDAO.save((Figure) event.getObject());
 			ok = true;
 		}
 
-		if (GeneratorParameter.class.equals(event.getClazz())) {
+		if (event.getObject() instanceof GeneratorParameter) {
 			generatorParameterDAO.save((GeneratorParameter) event.getObject());
+			ok = true;
+		}
+
+		if (event.getObject() instanceof Sequence) {
+			sequenceDAO.save((Sequence) event.getObject());
 			ok = true;
 		}
 

@@ -35,7 +35,7 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 	/** Object attributes to display (one by column) */
 	private List<String> properties;
 
-	/** Object list to display in table */
+	/** Object list to display in table ; <code>this</code> is key words to get full object (used to display <i>actions</i> column)*/
 	private List<T> objects;
 
 	/** Boolean properties : getter is <code>is</code> and not <code>get</code>. */
@@ -54,9 +54,6 @@ public class TableModelReflector<T> extends AbstractTableModel implements TableM
 		this.clazz = clazz;
 		this.properties = properties;
 		this.objects = objects;
-
-		// Adding "action" columns
-		properties.add(0, "this");
 	}
 
 	/**

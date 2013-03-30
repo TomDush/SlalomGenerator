@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import fr.dush.slalomgenerator.dto.model.GeneratorParameter;
 import fr.dush.slalomgenerator.dto.model.Sequence;
 import fr.dush.slalomgenerator.exceptions.GeneratorException;
 
+@Named
 public class GeneratorImpl implements IGenerator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GeneratorImpl.class);

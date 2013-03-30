@@ -41,7 +41,7 @@ public class TableModelReflectorProvider {
 	@Scope("prototype")
 	public TableModelReflector<GeneratorParameter> generateParameterTableModel() {
 		final TableModelReflector<GeneratorParameter> tableModelReflector = new TableModelReflector<GeneratorParameter>(bundle, GeneratorParameter.class,
-				newArrayList("name", "maxFigures", "turnbackNumber"), generatorParameterDAO.findAll());
+				newArrayList("this", "name", "maxFigures", "turnbackNumber"), generatorParameterDAO.findAll());
 		bus.register(tableModelReflector);
 		return tableModelReflector;
 	}
@@ -49,8 +49,8 @@ public class TableModelReflectorProvider {
 	@Bean(name = "modelSequence")
 	@Scope("prototype")
 	public TableModelReflector<Sequence> generateSequenceModel() {
-		final TableModelReflector<Sequence> tableModelReflector = new TableModelReflector<Sequence>(bundle, Sequence.class, newArrayList("name", "figuresSize"),
-				sequenceDAO.findAll());
+		final TableModelReflector<Sequence> tableModelReflector = new TableModelReflector<Sequence>(bundle, Sequence.class, newArrayList("this", "name",
+				"figuresSize"), sequenceDAO.findAll());
 		bus.register(tableModelReflector);
 		return tableModelReflector;
 	}
@@ -58,8 +58,8 @@ public class TableModelReflectorProvider {
 	@Bean(name = "modelFigure")
 	@Scope("prototype")
 	public TableModelReflector<Figure> generateFigureModel() {
-		final TableModelReflector<Figure> figureModel = new TableModelReflector<Figure>(bundle, Figure.class, newArrayList("name", "plotSize", "startingDirection",
-				"inverseDirection", "aboutTurn"), figureDAO.findAll());
+		final TableModelReflector<Figure> figureModel = new TableModelReflector<Figure>(bundle, Figure.class, newArrayList("this", "name", "plotSize",
+				"startingDirection", "inverseDirection", "aboutTurn"), figureDAO.findAll());
 
 		// Set boolean properties...
 		figureModel.setBooleanProperties(newArrayList("aboutTurn"));
