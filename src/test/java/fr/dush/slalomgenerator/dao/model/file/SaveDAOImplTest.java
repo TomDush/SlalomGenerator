@@ -1,4 +1,4 @@
-package fr.dush.slalomgenerator.dao.model.inmemory;
+package fr.dush.slalomgenerator.dao.model.file;
 
 import static com.google.common.collect.Lists.*;
 import static fr.dush.slalomgenerator.dao.model.inmemory.FigureDAOImplTest.*;
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.dush.slalomgenerator.dao.model.IFigureDAO;
 import fr.dush.slalomgenerator.dao.model.IGeneratorParameterDAO;
 import fr.dush.slalomgenerator.dao.model.ISequenceDAO;
+import fr.dush.slalomgenerator.dao.model.file.SaveDAOImpl;
 import fr.dush.slalomgenerator.dao.utils.FigureListSerializer;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.dto.model.Figures;

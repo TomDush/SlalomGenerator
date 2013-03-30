@@ -1,4 +1,4 @@
-package fr.dush.slalomgenerator.dao.model.inmemory;
+package fr.dush.slalomgenerator.dao.model.file;
 
 import static com.google.common.collect.Lists.*;
 
