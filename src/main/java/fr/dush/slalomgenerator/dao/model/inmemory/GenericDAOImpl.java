@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.fest.util.Strings;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 
 import fr.dush.slalomgenerator.dao.model.IGenericDAO;

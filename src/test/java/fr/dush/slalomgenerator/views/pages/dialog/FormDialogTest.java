@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
@@ -13,6 +14,7 @@ import com.google.common.eventbus.EventBus;
 import fr.dush.slalomgenerator.dto.model.Figure;
 import fr.dush.slalomgenerator.engine.AbstractJunitTest;
 
+@Ignore("User test (display dialog)")
 public class FormDialogTest extends AbstractJunitTest {
 
 	@Inject
