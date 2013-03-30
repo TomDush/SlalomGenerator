@@ -19,8 +19,8 @@ import fr.dush.slalomgenerator.events.configuration.LoadConfigurationEvent;
 import fr.dush.slalomgenerator.events.configuration.SaveConfigurationEvent;
 import fr.dush.slalomgenerator.events.generic.AboutEvent;
 import fr.dush.slalomgenerator.events.generic.QuitEvent;
-import fr.dush.slalomgenerator.events.model.CreateRequestEvent;
 import fr.dush.slalomgenerator.events.model.ModelEvent;
+import fr.dush.slalomgenerator.events.model.dialog.CreateRequestEvent;
 import fr.dush.slalomgenerator.views.utils.EventUtils;
 import fr.dush.slalomgenerator.views.utils.UiUtils;
 

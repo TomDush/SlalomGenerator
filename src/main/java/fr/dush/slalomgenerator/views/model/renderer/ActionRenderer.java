@@ -18,10 +18,10 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.dush.slalomgenerator.events.model.DeleteEvent;
-import fr.dush.slalomgenerator.events.model.EditEvent;
 import fr.dush.slalomgenerator.events.model.GenerateEvent;
 import fr.dush.slalomgenerator.events.model.ModelObjectEvent;
+import fr.dush.slalomgenerator.events.model.dialog.DeleteRequestEvent;
+import fr.dush.slalomgenerator.events.model.dialog.EditRequestEvent;
 import fr.dush.slalomgenerator.views.utils.EventUtils;
 import fr.dush.slalomgenerator.views.utils.IValueProvider;
 import fr.dush.slalomgenerator.views.utils.UiUtils;
@@ -123,11 +123,11 @@ public class ActionRenderer extends AbstractCellEditor implements TableCellEdito
 	protected Class<? extends ModelObjectEvent> getEventType(Action action) {
 		switch (action) {
 			case DELETE:
-				return DeleteEvent.class;
+				return DeleteRequestEvent.class;
 
 			case EDIT:
 			case SHOW:
-				return EditEvent.class;
+				return EditRequestEvent.class;
 
 			case GENERATE:
 				return GenerateEvent.class;

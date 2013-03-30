@@ -1,4 +1,7 @@
-package fr.dush.slalomgenerator.events.model;
+package fr.dush.slalomgenerator.events.model.dialog;
+
+import fr.dush.slalomgenerator.events.model.EventType;
+import fr.dush.slalomgenerator.events.model.ModelEvent;
 
 public class CreateRequestEvent extends ModelEvent {
 
