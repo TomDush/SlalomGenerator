@@ -4,7 +4,7 @@
 
 	<groupId>fr.dush</groupId>
 	<artifactId>slalom-generator</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0-RELEASE</version>
 
 	<name>Slalom Generator</name>
 	<description>Générateur de séquence de slalom à roller</description>
