@@ -20,6 +20,6 @@ public class EventLogger {
 
 	@Subscribe
 	public void logEvent(DeadEvent event) {
-		LOGGER.info("Received but not treated : {}", event.getEvent());
+		LOGGER.warn("Received but not treated : {} (DeadEvent)", event.getEvent());
 	}
 }
